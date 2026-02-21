@@ -7,6 +7,7 @@ import Headers from '../../components/header'
 import TextArea from '../../assets/textArea.svg'
 import PotIcon from '../../assets/pot.svg'
 import Char1 from '../../assets/char1.svg'
+import Char2 from '../../assets/char2.svg'
 
 import { 
   pageStyle, 
@@ -36,8 +37,8 @@ interface Feed {
 }
 
 // 레벨별 다음 레벨까지 필요한 피드 수
-// Lv1 → 2: 15개, Lv2 → 3: 30개, Lv3+: 50개
-const LEVEL_THRESHOLDS = [15, 30, 50]
+// Lv1 → 2: 3개, Lv2 → 3: 30개, Lv3+: 50개
+const LEVEL_THRESHOLDS = [3, 30, 50]
 
 function getLevelInfo(feedCount: number): { level: number; progress: number } {
   let remaining = feedCount
@@ -67,22 +68,48 @@ export default function Home() {
   useEffect(() => {
     const fetchFeeds = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/feed`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const token = localStorage.getItem('token')
+        console.log(' Token:', token ? `있음 (${token.substring(0, 20)}...)` : '없음')
+        console.log(' API URL:', `${import.meta.env.VITE_API_BASE_URL}/feed`)
 
-        const data: Feed[] = await res.json()
-        console.log('data[0]:', data[0])
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/feed`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              ...(token && { 'Authorization': `Bearer ${token}` }),
+            },
+          }
+        )
+        
+        console.log('✅ Feed data loaded:', data)
 
-        setFeeds(data)
+        let feedArray: Feed[] = []
+        if (Array.isArray(data)) {
+          feedArray = data
+        } else if (data?.data && Array.isArray(data.data)) {
+          feedArray = data.data
+        } else if (data?.feeds && Array.isArray(data.feeds)) {
+          feedArray = data.feeds
+        }
 
-        // 피드 수 기준으로 레벨 계산 후 로컬에 저장
-        localStorage.setItem('feedCount', String(data.length))
-        setLevelInfo(getLevelInfo(data.length))
+        setFeeds(feedArray)
+        localStorage.setItem('feedCount', String(feedArray.length))
+        setLevelInfo(getLevelInfo(feedArray.length))
       } catch (err) {
-        console.error('feed 불러오기 실패:', err)
+        if (axios.isAxiosError(err)) {
+          console.error('feed 불러오기 실패:', {
+            status: err.response?.status,
+            statusText: err.response?.statusText,
+            data: err.response?.data,
+            message: err.message,
+          })
+        } else {
+          console.error(' feed 불러오기 실패:', err)
+        }
+        
+        // 실패 시 더미 데이터 사용
+        
       }
     }
 
@@ -101,7 +128,7 @@ export default function Home() {
 
         <div css={Pet}>
           <div css={PetBox}>
-            <img src={Char1} alt="Char1" />
+            <img src={levelInfo.level >= 2 ? Char2 : Char1} alt="Character" />
           </div>
           <div css={PotArea}>
             <img src={PotIcon} alt="Pot" />

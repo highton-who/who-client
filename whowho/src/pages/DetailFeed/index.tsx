@@ -106,9 +106,11 @@ export default function Detail() {
           <div css={s.groupStyle}>
             <label css={s.labelStyle}>본문</label>
             <div css={s.displayBoxStyle}>
-              {feedData.content.split('\n').map((line, i) => (
-                <React.Fragment key={i}>{line}<br/></React.Fragment>
-              ))}
+              {(feedData.content || '')
+                .split('\n')
+                .map((line, i) => (
+                  <React.Fragment key={i}>{line}<br/></React.Fragment>
+                ))}
             </div>
           </div>
 
