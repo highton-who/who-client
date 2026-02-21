@@ -1,0 +1,30 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #f5f5f5;
+}
+
+#root {
+  width: 100%;
+  max-width: 402px; /* iPhone 16 Pro 기준 폭 */
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: #fff;
+  position: relative;
+
+  /* 시뮬레이터/모바일 안전영역 대응 */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (min-height: 874px) {
+  #root {
+    min-height: 874px; /* 디자인 기준 높이 */
+  }
+}

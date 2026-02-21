@@ -14,11 +14,11 @@ const navWrapStyle = css`
   z-index: 100;
 `
 
-export default function Home() {
+export default function Create() {
   return (
     <div css={pageStyle}>
       <div css={navWrapStyle}>
-        <Nav active="home" />
+        <Nav active="plus" />
       </div>
     </div>
   )
