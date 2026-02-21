@@ -3,6 +3,7 @@ import { css } from '@emotion/react'
 export const pageStyle = css`
   min-height: 100vh;
   position: relative;
+  padding-top: 86px;
 `
 
 export const navWrapStyle = css`

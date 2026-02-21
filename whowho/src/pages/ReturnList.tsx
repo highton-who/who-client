@@ -10,6 +10,8 @@ const pageStyle = css`
   background-color: #fff;
   min-height: 100vh;
   position: relative;
+  padding-top: 76px;
+  box-sizing: border-box;
 `
 
 

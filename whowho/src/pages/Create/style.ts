@@ -14,7 +14,7 @@ export const pageStyle = css`
   min-height: 100vh;
   background: ${COLORS.bg};
   position: relative;
-  padding: 28px 20px 140px;
+  padding: 104px 20px 140px;
   box-sizing: border-box;
 `
 
