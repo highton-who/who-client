@@ -1,23 +1,89 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import axios from 'axios'
 import * as s from './style'
 import ProfileIcon from '../../assets/profileIcon.svg'
 
+interface FeedDetail {
+  id: number
+  imgUrl: string
+  title: string
+  content: string
+  date: string
+  type: string
+  price: string
+  sender: string
+  memo: string
+}
+
 export default function Detail() {
   const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>()
+  const [feedData, setFeedData] = useState<FeedDetail | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchFeedDetail = async () => {
+      try {
+        setLoading(true)
+        const token = localStorage.getItem('token')
+        const { data } = await axios.get<FeedDetail>(
+          `${import.meta.env.VITE_API_BASE_URL}/feed/${id}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              ...(token && { Authorization: `Bearer ${token}` }),
+            },
+          }
+        )
+        setFeedData(data)
+        setError(null)
+      } catch (err) {
+        if (axios.isAxiosError(err)) {
+          console.error('피드 상세 조회 실패:', {
+            status: err.response?.status,
+            data: err.response?.data,
+            message: err.message,
+          })
+          setError('피드를 불러올 수 없습니다.')
+        } else {
+          console.error('피드 상세 조회 실패:', err)
+          setError('오류가 발생했습니다.')
+        }
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (id) {
+      fetchFeedDetail()
+    }
+  }, [id])
 
   const handleBackClick = () => {
-    navigate('/')
+    navigate('/home')
   }
-  const giftData = {
-    imageUrl: "https://your-server-image-url.com/flower.jpg", // 서버 이미지 주소
-    title: "생일에 받은 선물~!",
-    content: "나의 생일의 좋은 꽃말이 담겨있는 꽃을 선물로 받았당\n이날은 너무 행복해서 영원히 기억하고싶다!!\n민수야 너무좋다~~",
-    date: "2008.07.04",
-    type: "생일선물",
-    price: "12,500원",
-    sender: "김민수",
-    memo: "민수는 향수좋아함, 다음에 우디향 향수같은걸 줘야겟음"
+
+  if (loading) {
+    return (
+      <div css={s.pageStyle}>
+        <div css={s.containerStyle}>
+          <p style={{ textAlign: 'center', paddingTop: '50px' }}>로딩 중...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !feedData) {
+    return (
+      <div css={s.pageStyle}>
+        <div css={s.containerStyle}>
+          <button css={s.backButtonStyle} onClick={handleBackClick}>&lt;</button>
+          <p style={{ textAlign: 'center', paddingTop: '50px' }}>{error || '데이터를 찾을 수 없습니다.'}</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -26,21 +92,21 @@ export default function Detail() {
         {/* 상단 이미지 영역 - 서버 주소를 바로 src에 사용 */}
         <div css={s.imageBoxStyle}>
           <button css={s.backButtonStyle} onClick={handleBackClick}>&lt;</button>
-          <img src={giftData.imageUrl} alt="Gift" />
+          <img src={feedData.imgUrl} alt="Gift" />
         </div>
 
         <div css={s.contentSectionStyle}>
           {/* 제목 섹션 */}
           <div css={s.groupStyle}>
             <label css={s.labelStyle}>제목</label>
-            <div css={s.displayBoxStyle}>{giftData.title}</div>
+            <div css={s.displayBoxStyle}>{feedData.title}</div>
           </div>
 
           {/* 본문 섹션 */}
           <div css={s.groupStyle}>
             <label css={s.labelStyle}>본문</label>
             <div css={s.displayBoxStyle}>
-              {giftData.content.split('\n').map((line, i) => (
+              {feedData.content.split('\n').map((line, i) => (
                 <React.Fragment key={i}>{line}<br/></React.Fragment>
               ))}
             </div>
@@ -50,14 +116,14 @@ export default function Detail() {
           <div css={s.profileRowStyle}>
             <img src={ProfileIcon} alt="Profile" />
             <div css={s.infoTextStyle}>
-              <div className="top">{giftData.date} / {giftData.type} / {giftData.price}</div>
-              <div className="name">{giftData.sender}</div>
+              <div className="top">{feedData.date} / {feedData.type} / {feedData.price}</div>
+              <div className="name">{feedData.sender}</div>
             </div>
           </div>
 
           {/* 메모 영역 */}
           <div css={s.displayBoxStyle}>
-            {giftData.memo}
+            {feedData.memo}
           </div>
 
           {/* 하단 버튼 */}

@@ -1,5 +1,7 @@
 /** @jsxImportSource @emotion/react */
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import Nav from '../../components/nav'
 import Headers from '../../components/header'
 import TextArea from '../../assets/textArea.svg'
@@ -25,43 +27,67 @@ import {
   CardImage,
   CardContent,
   CardTitle,
-  CardDate,
 } from './style'
 
-// 더미 데이터
-const dummyGifts = [
-  {
-    id: 1,
-    title: "생일 꽃다발",
-    imgURL: "https://via.placeholder.com/150/FFB6C1/FFFFFF?text=Flower",
-    date: "2024.01.15"
-  },
-  {
-    id: 2,
-    title: "크리스마스 선물",
-    imgURL: "https://via.placeholder.com/150/87CEEB/FFFFFF?text=Gift",
-    date: "2023.12.25"
-  },
-  {
-    id: 3,
-    title: "졸업 축하 선물",
-    imgURL: "https://via.placeholder.com/150/98FB98/FFFFFF?text=Graduate",
-    date: "2024.02.20"
-  },
-  {
-    id: 4,
-    title: "기념일 케이크",
-    imgURL: "https://via.placeholder.com/150/DDA0DD/FFFFFF?text=Cake",
-    date: "2024.03.14"
+interface Feed {
+  id: number
+  imgUrl: string
+  title: string
+}
+
+// 레벨별 다음 레벨까지 필요한 피드 수
+// Lv1 → 2: 15개, Lv2 → 3: 30개, Lv3+: 50개
+const LEVEL_THRESHOLDS = [15, 30, 50]
+
+function getLevelInfo(feedCount: number): { level: number; progress: number } {
+  let remaining = feedCount
+  let level = 1
+
+  for (const threshold of LEVEL_THRESHOLDS) {
+    if (remaining < threshold) {
+      return { level, progress: remaining / threshold }
+    }
+    remaining -= threshold
+    level++
   }
-]
+
+  // 최대 레벨 도달 시 꽉 찬 상태
+  return { level, progress: 1 }
+}
 
 export default function Home() {
   const navigate = useNavigate()
+  const [feeds, setFeeds] = useState<Feed[]>([])
+  const [levelInfo, setLevelInfo] = useState(() => {
+    // 초기값은 로컬스토리지에서 복원
+    const saved = localStorage.getItem('feedCount')
+    return saved ? getLevelInfo(Number(saved)) : { level: 1, progress: 0 }
+  })
 
-  const handleCardClick = (id: number) => {
-    navigate(`/feed/${id}`)
-  }
+  useEffect(() => {
+    const fetchFeeds = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/feed`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+        const data: Feed[] = await res.json()
+        console.log('data[0]:', data[0])
+
+        setFeeds(data)
+
+        // 피드 수 기준으로 레벨 계산 후 로컬에 저장
+        localStorage.setItem('feedCount', String(data.length))
+        setLevelInfo(getLevelInfo(data.length))
+      } catch (err) {
+        console.error('feed 불러오기 실패:', err)
+      }
+    }
+
+    fetchFeeds()
+  }, [])
 
   return (
     <div css={pageStyle}>
@@ -81,9 +107,10 @@ export default function Home() {
             <img src={PotIcon} alt="Pot" />
             
             <div css={LevelBarWrap}>
-              <div css={LevelBadge}>Lv.1</div>
+              <div css={LevelBadge}>Lv.{levelInfo.level}</div>
               <div css={ProgressBar}>
-                <div css={ProgressFill} />
+                {/* ProgressFill에 progress 비율(0~1) 전달 — style.ts에서 width로 사용 */}
+                <div css={ProgressFill(levelInfo.progress)} />
               </div>
             </div>
           </div>
@@ -95,22 +122,20 @@ export default function Home() {
           <span>지난날의 추억</span>
         </div>
         
-        {/* 카드 슬라이더 */}
         <div css={CardSlide}>
-          {dummyGifts.map((gift) => (
+          {feeds.map((feed) => (
             <div 
-              key={gift.id}
+              key={feed.id}
               css={SlideCard}
-              onClick={() => handleCardClick(gift.id)}
+              onClick={() => navigate(`/feed/${feed.id}`)}
             >
               <img 
-                src={gift.imgURL} 
-                alt={gift.title}
+                src={feed.imgUrl} 
+                alt={feed.title}
                 css={CardImage}
               />
               <div css={CardContent}>
-                <p css={CardTitle}>{gift.title}</p>
-                <p css={CardDate}>{gift.date}</p>
+                <p css={CardTitle}>{feed.title}</p>
               </div>
             </div>
           ))}
@@ -122,4 +147,4 @@ export default function Home() {
       </div>
     </div>
   )
-}
+} 

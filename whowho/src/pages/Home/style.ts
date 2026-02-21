@@ -113,7 +113,7 @@ export const ProgressBar = css`
   align-items: center;
 `
 
-export const ProgressFill = css`
+export const ProgressFill = (progress: number) => css`
   height: 10px;
   margin: 0 2px;
   background: repeating-linear-gradient(
@@ -123,8 +123,9 @@ export const ProgressFill = css`
     #ffffff 12px,
     #ffffff 15px
   );
-  width: 60%; 
+  width: ${progress * 100}%; 
   border-radius: 10px;
+  transition: width 0.3s ease;
 `
 
 export const MainFooter = css`
