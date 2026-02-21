@@ -5,6 +5,7 @@ import ReturnList from '../pages/Return/ReturnList'
 import Splash from '../pages/Splash/Splash'
 import Login from '../pages/Login/Login'
 import Join from "../pages/Join/Join"
+import DetailFeed from '../pages/DetailFeed'
 
 export default function AppRouter() {
   return (
@@ -18,6 +19,8 @@ export default function AppRouter() {
         <Route path="/home" element={<Home />} />
         <Route path="/create" element={<Create />} />
         <Route path="/list" element={<ReturnList />} />
+        <Route path="/detail" element={<ReturnList />} />
+        <Route path="/feed/:id" element={<DetailFeed />} />
         <Route path="/join" element={<Join />} />
       </Routes>
     </BrowserRouter>
