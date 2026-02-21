@@ -7,12 +7,7 @@ export default function Create() {
     <div css={s.pageStyle}>
       <section css={s.formCardStyle}>
         <div css={s.sectionStyle}>
-          <label css={s.labelStyle}>
-            사진
-            <span css={s.helperStyle}>선물 사진 또는 캡처 이미지</span>
-          </label>
           <div css={s.imageUploadBoxStyle}>
-            <div css={s.imageBadgeStyle}>📷</div>
             <div css={s.imageMainTextStyle}>사진 URL 또는 업로드 영역</div>
             <div css={s.imageSubTextStyle}>나중에 연결될 자리 (현재 UI 목업)</div>
           </div>
