@@ -154,21 +154,6 @@ export default function Nav({
         type="button"
         style={buttonStyle}
         onClick={() => {
-          if (onUserClick) {
-            onUserClick();
-            return;
-          }
-          navigate('/profile');
-        }}
-        aria-label="사용자"
-      >
-        <UserIcon active={active === 'user'} />
-      </button>
-
-      <button
-        type="button"
-        style={buttonStyle}
-        onClick={() => {
           navigate('/list');
         }}
         aria-label="목록"
