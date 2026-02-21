@@ -2,9 +2,15 @@ import { css } from '@emotion/react'
 import Nav from '../components/nav'
 
 const pageStyle = css`
+  width: 100vw;
+  height: 100vh;
+  max-width: 402px;
+  margin: 0 auto;
+  background-color: #fff;
   min-height: 100vh;
   position: relative;
 `
+
 
 const navWrapStyle = css`
   position: fixed;
@@ -14,11 +20,11 @@ const navWrapStyle = css`
   z-index: 100;
 `
 
-export default function Home() {
+export default function Profile() {
   return (
     <div css={pageStyle}>
       <div css={navWrapStyle}>
-        <Nav active="home" />
+        <Nav active="user" />
       </div>
     </div>
   )
