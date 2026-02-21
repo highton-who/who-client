@@ -67,33 +67,22 @@ export default function Home() {
   useEffect(() => {
     const fetchFeeds = async () => {
       try {
-        const token = localStorage.getItem('token')
-        const { data } = await axios.get<Feed[]>(
-          `${import.meta.env.VITE_API_BASE_URL}/feed`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              ...(token && { Authorization: `Bearer ${token}` }),
-            },
-          }
-        )
-        console.log('Feed data loaded:', data)
-        console.log('API URL:', `${import.meta.env.VITE_API_BASE_URL}/feed`)
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/feed`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+        const data: Feed[] = await res.json()
+        console.log('data[0]:', data[0])
+
         setFeeds(data)
 
         // 피드 수 기준으로 레벨 계산 후 로컬에 저장
         localStorage.setItem('feedCount', String(data.length))
         setLevelInfo(getLevelInfo(data.length))
       } catch (err) {
-        if (axios.isAxiosError(err)) {
-          console.error('feed 불러오기 실패:', {
-            status: err.response?.status,
-            data: err.response?.data,
-            message: err.message,
-          })
-        } else {
-          console.error('feed 불러오기 실패:', err)
-        }
+        console.error('feed 불러오기 실패:', err)
       }
     }
 
