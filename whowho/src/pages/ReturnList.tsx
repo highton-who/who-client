@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import Nav from '../components/nav'
+import Header from '../components/header'
 
 const pageStyle = css`
   width: 100vw;
@@ -23,6 +24,7 @@ const navWrapStyle = css`
 export default function ReturnList() {
   return (
     <div css={pageStyle}>
+      <Header />
       <div css={navWrapStyle}>
         <Nav active="list" />
       </div>
