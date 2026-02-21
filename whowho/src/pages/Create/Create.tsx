@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
-import Nav from '../components/nav'
-import * as s from './createstyle'
+import Nav from '../../components/nav'
+import * as s from './style'
 
 export default function Create() {
   return (
