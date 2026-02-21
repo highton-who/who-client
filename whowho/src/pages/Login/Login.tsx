@@ -43,7 +43,6 @@ export default function Login() {
         password,
       })
 
-      // 백엔드 응답 키가 accessToken 기준이라고 가정
       const accessToken = data?.accessToken
 
       if (!accessToken) {
@@ -51,6 +50,7 @@ export default function Login() {
         return
       }
 
+      // api.ts에서 localStorage.getItem('token') 으로 읽도록 맞춤
       localStorage.setItem('token', accessToken)
 
       navigate('/home')
@@ -61,7 +61,6 @@ export default function Login() {
           return
         }
 
-        // 백엔드가 에러 메시지를 내려주는 경우
         const backendType = (e.response?.data as { type?: string } | undefined)?.type
         if (backendType) {
           setError(`로그인 실패: ${backendType}`)
