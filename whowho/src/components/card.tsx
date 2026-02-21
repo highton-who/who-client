@@ -1,11 +1,33 @@
+import { useNavigate } from 'react-router-dom';
+
 type CardProps = {
   title: string;
   imgURL: string;
+  id?: string | number;
 };
 
-export default function Card({ title, imgURL }: CardProps) {
+export default function Card({ title, imgURL, id }: CardProps) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (id !== undefined) {
+      navigate(`/gift/${id}`);
+      return;
+    }
+    navigate('/gift/detail');
+  };
+
   return (
     <div
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
       style={{
         width: '161.324px',
         height: '194.136px',
@@ -14,6 +36,7 @@ export default function Card({ title, imgURL }: CardProps) {
         padding: '12px',
         boxSizing: 'border-box',
         boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08)',
+        cursor: 'pointer',
       }}
     >
       <img
