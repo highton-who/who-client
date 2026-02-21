@@ -40,10 +40,10 @@ export default function Create() {
         <div css={s.sectionStyle}>
           <label css={s.labelStyle}>선물을 준 사람 정보</label>
           <div css={s.personGridStyle}>
-            <input css={s.inputStyle} type="text" placeholder="이름 (예: 민수)" />
-            <input css={s.inputStyle} type="text" placeholder="준 사람의 생일 (예: 03.14)" />
-            <input css={s.inputStyle} type="text" placeholder="선물 가격 (예: 49000원)" />
-            <input css={s.inputStyle} type="text" placeholder="상황 (예: 생일 / 출장선물)" />
+            <input css={s.inputStyle} type="text" placeholder="이름 " />
+            <input css={s.inputStyle} type="text" placeholder="준 사람의 생일" />
+            <input css={s.inputStyle} type="text" placeholder="선물 가격" />
+            <input css={s.inputStyle} type="text" placeholder="선물 목적" />
           </div>
           <textarea
             css={css`
