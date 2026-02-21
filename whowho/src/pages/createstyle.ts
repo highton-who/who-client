@@ -70,7 +70,6 @@ export const helperStyle = css`
 export const imageUploadBoxStyle = css`
   height: 220px;
   border-radius: 16px;
-  border: 2px dashed rgba(178, 242, 129, 0.85);
   background: 
     rgba(178, 242, 129, 0.12) ;
   display: flex;
@@ -168,7 +167,7 @@ export const submitButtonStyle = css`
   border: none;
   border-radius: 14px;
   background: ${COLORS.primary};
-  color: ${COLORS.text};
+  color: #5a3921;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
