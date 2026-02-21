@@ -1,9 +1,7 @@
-
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-type NavItem = 'plus' | 'home' | 'user';
+type NavItem = 'plus' | 'home' | 'user' | 'list';
 
 interface NavProps {
   active?: NavItem;
@@ -12,7 +10,7 @@ interface NavProps {
   onUserClick?: () => void;
 }
 
-const ACTIVE_COLOR = '#DDA0DD';
+const ACTIVE_COLOR = '#8FDD7C';
 const INACTIVE_COLOR = '#000000';
 
 const wrapperStyle: React.CSSProperties = {
@@ -83,6 +81,36 @@ function UserIcon({ active }: { active: boolean }) {
   );
 }
 
+function ReturnList({ active }: { active: boolean }) {
+  const color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
+
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <g clipPath="url(#clip0_111_188)">
+        <path
+          d="M18.375 7.875H22.75C23.2141 7.875 23.6592 8.05937 23.9874 8.38756C24.3156 8.71575 24.5 9.16087 24.5 9.625V21.1505C24.4999 21.6143 24.3157 22.0591 23.9878 22.3872L19.7622 26.6128C19.4341 26.9407 18.9893 27.1249 18.5255 27.125H5.25C4.78587 27.125 4.34075 26.9406 4.01256 26.6124C3.68437 26.2842 3.5 25.8391 3.5 25.375V9.625C3.5 9.16087 3.68437 8.71575 4.01256 8.38756C4.34075 8.05937 4.78587 7.875 5.25 7.875H9.625"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M17.5 27.125V21.875C17.5 21.4109 17.6844 20.9658 18.0126 20.6376C18.3408 20.3094 18.7859 20.125 19.25 20.125H24.5M14 6.875C13.3038 6.875 12.6361 6.59844 12.1438 6.10615C11.6516 5.61387 11.375 4.94619 11.375 4.25C11.375 3.55381 11.6516 2.88613 12.1438 2.39384C12.6361 1.90156 13.3038 1.625 14 1.625C14.6962 1.625 15.3639 1.90156 15.8562 2.39384C16.3484 2.88613 16.625 3.55381 16.625 4.25C16.625 4.94619 16.3484 5.61387 15.8562 6.10615C15.3639 6.59844 14.6962 6.875 14 6.875ZM14 6.875V13M7.875 16.625H20.125M7.875 21.875H13.125"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_111_188">
+          <rect width="28" height="28" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
 export default function Nav({
   active = 'home',
   onPlusClick,
@@ -135,6 +163,17 @@ export default function Nav({
         aria-label="사용자"
       >
         <UserIcon active={active === 'user'} />
+      </button>
+
+      <button
+        type="button"
+        style={buttonStyle}
+        onClick={() => {
+          navigate('/list');
+        }}
+        aria-label="목록"
+      >
+        <ReturnList active={active === 'list'} />
       </button>
     </nav>
   );
