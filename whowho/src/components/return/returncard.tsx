@@ -18,7 +18,7 @@ export default function ReturnCard({ title = '선물', image }: ReturnCardProps)
       <div css={thumbWrapStyle}>
         <img
           css={thumbStyle}
-          src={image || "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=800&q=80"}
+          src={image || "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=800&q=80"}
           alt={title}
         />
         <button type="button" css={actionButtonStyle}>
