@@ -36,6 +36,24 @@ interface Feed {
   title: string
 }
 
+const DUMMY_FEEDS: Feed[] = [
+  {
+    id: 1,
+    imgUrl: 'https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=800&q=80',
+    title: '첫 번째 선물 기록',
+  },
+  {
+    id: 2,
+    imgUrl: 'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=800&q=80',
+    title: '생일에 받은 꽃다발',
+  },
+  {
+    id: 3,
+    imgUrl: 'https://images.unsplash.com/photo-1481391032119-d89fee407e44?auto=format&fit=crop&w=800&q=80',
+    title: '고마운 마음 메모',
+  },
+]
+
 // 레벨별 다음 레벨까지 필요한 피드 수
 // Lv1 → 2: 3개, Lv2 → 3: 30개, Lv3+: 50개
 const LEVEL_THRESHOLDS = [3, 30, 50]
@@ -109,6 +127,9 @@ export default function Home() {
         }
         
         // 실패 시 더미 데이터 사용
+        setFeeds(DUMMY_FEEDS)
+        localStorage.setItem('feedCount', String(DUMMY_FEEDS.length))
+        setLevelInfo(getLevelInfo(DUMMY_FEEDS.length))
         
       }
     }
